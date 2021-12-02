@@ -43,8 +43,9 @@ void playMinesweeper() {
 
 
 	bool gameOver(false);
-	clock_t t1, t2;
+	clock_t t1, t2, t3, timeNow;
 	t1 = clock();
+	t3 = clock();
 	// create 2 dimension array
 	char baseBoard[MAXSIDE][MAXSIDE], displayBoard[MAXSIDE][MAXSIDE];
 	int remainTurn(LENGTH * LENGTH - MINES), x, y;
@@ -63,8 +64,13 @@ void playMinesweeper() {
 	char put;
 	cout << "Do you want to load your save game? (Y/N): ";
 	cin >> put;
-	if (put == 'y' || put == 'Y')
+	if (put == 'y' || put == 'Y') {
 		openSaveGame(displayBoard, baseBoard, mines, remainTurn, t1);
+		t1 = t1 - t3;
+		
+	}
+	else t1 = -t1;
+		
 
 	// Start to play game !!!
 	while (!gameOver) {
@@ -85,7 +91,9 @@ void playMinesweeper() {
 			continue;
 		}
 		else if (put == 's') {
-			saveGame( displayBoard,  baseBoard,  mines,  remainTurn,  t1);
+			timeNow = clock();
+			timeNow = timeNow + t1 ;
+			saveGame( displayBoard,  baseBoard,  mines,  remainTurn,  timeNow);
 			exit(0);
 		}
 		moving(x, y);
@@ -160,7 +168,7 @@ bool continuePlayGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE],
 		outputConsole(displayBoard);
 		cout << '\n';
 		t2 = clock();
-		cout << "\nTime to complete: " << (((int)t2) - ((int)t1)) / 1000 <<" sec\n" ;
+		cout << "\nTime to complete: " << (((int)t2) + ((int)t1)) / 1000 <<" sec\n" ;
 		setColor(12);
 		cout  << "\tYOU LOSE !!!";
 

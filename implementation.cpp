@@ -186,24 +186,28 @@ void saveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mi
 	outFile.open("Text.txt");
 	for (int i = 0; i < LENGTH; i++) {
 		for (int j = 0; j < LENGTH; j++) {
-			outFile << displayBoard[i][j] << '\n';
+			outFile << displayBoard[i][j] << ' ';
 			
 		}
-	}
-
-
-	for (int i = 0; i < LENGTH; i++) {
-		for (int j = 0; j < LENGTH; j++) {
-			outFile << baseBoard[i][j] << '\n';
-		}
+		outFile << '\n';
 	}
 
 	
-	for (int i = 0; i < MINES; i++) {
-		outFile << mines[i].x << '\n' << mines[i].y << '\n';
+
+	for (int i = 0; i < LENGTH; i++) {
+		for (int j = 0; j < LENGTH; j++) {
+			outFile << baseBoard[i][j] << ' ';
+		}
+		outFile << '\n';
 	}
 
-	outFile << remainTurn << '\n' << t1;
+	
+
+	for (int i = 0; i < MINES; i++) {
+		outFile << mines[i].x << ' ' << mines[i].y << '\n';
+	}
+
+	outFile << remainTurn << ' ' << t1;
 	outFile.close();
 	return;
 }

@@ -69,3 +69,6 @@ void saveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mi
 
 //open save game:
 void openSaveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mines[MAXMINES], int& remainTurn, clock_t& t1);
+
+// leaderboard:
+void scoreBoard(double time, char name[50]);
