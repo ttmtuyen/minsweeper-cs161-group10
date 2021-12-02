@@ -65,4 +65,7 @@ int countAdjacentMines(int row, int col, random mines[MAXMINES],
 bool checkExist(int row, int col);
 
 // save file:
-void saveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mines[MAXMINES], int& remainTurn, clock_t& t1);
+void saveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mines[MAXMINES], int remainTurn, clock_t t1);
+
+//open save game:
+void openSaveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mines[MAXMINES], int& remainTurn, clock_t& t1);

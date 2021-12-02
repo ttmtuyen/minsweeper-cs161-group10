@@ -7,7 +7,7 @@ int MINES(0); // number of mines on the board
 void promptUserToChooseLevel() {
 	system("cls");
 	setColor(12);
-	cout  << "\t\t\tWelcome to game Minesweeper\n\n";
+	cout  << "\t\t\tWelcome to playing game Minesweeper\n\n";
 	setColor(7);
 	int level;
 	cout  << "----------------------------NEMU-------------------------------------\n";
@@ -58,14 +58,25 @@ void playMinesweeper() {
 	// check whether it is the first time move or not
 	bool firstMove = true;
 	
+	// open save game:
+	system("cls");
+	char put;
+	cout << "Do you want to load your save game? (Y/N): ";
+	cin >> put;
+	if (put == 'y' || put == 'Y')
+		openSaveGame(displayBoard, baseBoard, mines, remainTurn, t1);
 
 	// Start to play game !!!
 	while (!gameOver) {
+	
 		system("cls");
 		// check the player want to put plag or move
-		char put;
+		char put(0);
 		outputConsole(displayBoard);
-		cout << endl << "If you want to put flag, press 'p' if not, press another key: ";
+		cout << endl << "\t\t\tMENU";
+		cout << endl << "If you want to put flag, press 'p'";
+		cout << endl << "If you want to save game, press 's'";
+		cout << endl << "If you want to move, press any key to continue.\n";
 		cin >> put;
 		cin.ignore(20, '\n');
 		if (put == 'p') {
@@ -74,15 +85,9 @@ void playMinesweeper() {
 			continue;
 		}
 		else if (put == 's') {
-			void saveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mines[MAXMINES], int remainTurn, clock_t t1);
+			saveGame( displayBoard,  baseBoard,  mines,  remainTurn,  t1);
 			exit(0);
 		}
-		else if (put == 'a') {
-			void openSaveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mines[MAXMINES], int remainTurn, clock_t t1);
-			continue;
-		}
-
-
 		moving(x, y);
 
 		if (firstMove == true) {

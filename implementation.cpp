@@ -182,10 +182,12 @@ int countAdjacentMines(int row, int col, random mines[MAXMINES],
 
 void saveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mines[MAXMINES], int remainTurn, clock_t t1) {
 	ofstream outFile;
-	outFile.open("C:/Users/My PC/source/repos/minesweeper-cs161/minesweeper-cs161/Text.txt", ios::out);
+	
+	outFile.open("Text.txt");
 	for (int i = 0; i < LENGTH; i++) {
 		for (int j = 0; j < LENGTH; j++) {
 			outFile << displayBoard[i][j] << '\n';
+			
 		}
 	}
 
@@ -206,10 +208,11 @@ void saveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mi
 	return;
 }
 
+
 // open save game:
 void openSaveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mines[MAXMINES], int& remainTurn, clock_t& t1) {
 	ifstream outFile;
-	outFile.open("C:/Users/My PC/source/repos/minesweeper-cs161/minesweeper-cs161/Text.txt", ios::in);
+	outFile.open("Text.txt");
 	for (int i = 0; i < LENGTH; i++) {
 		for (int j = 0; j < LENGTH; j++) {
 			outFile >> displayBoard[i][j];
