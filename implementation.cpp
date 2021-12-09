@@ -1,7 +1,7 @@
 #include"main.h"
 extern int LENGTH;
 extern int MINES;
-
+extern int LEVEL;
 
 void initialization(char baseBoard[][MAXSIDE], char displayBoard[][MAXSIDE]) {
 	
@@ -61,7 +61,17 @@ void outputConsole(char displayBoard[][MAXSIDE]) {
 		else cout << i % 10 << " ";
 		setColor(7);
 		for (int j = 0; j < LENGTH; j++) {
-			cout << displayBoard[i][j] << " ";
+			if (displayBoard[i][j] <= '9' && displayBoard[i][j] >= '1') {
+				setColor(3);
+				cout << displayBoard[i][j] << " ";
+				setColor(7);
+			}
+			else if (displayBoard[i][j] == 'P') {
+				setColor(5);
+				cout << displayBoard[i][j] << " ";
+				setColor(7);
+			}
+			else cout << displayBoard[i][j] << " ";
 		}
 		cout << endl;
 	}
@@ -89,6 +99,7 @@ bool checkMine(int x, int y, char baseBoard[][MAXSIDE]) {
 		return false;
 }
 
+/*
 void replaceMine(int row, int col, char board[][MAXSIDE])
 {
 	for (int i = 0; i < LENGTH; i++)
@@ -106,6 +117,7 @@ void replaceMine(int row, int col, char board[][MAXSIDE])
 	}
 	return;
 }
+*/
 
 bool checkExist(int row, int col)
 {
@@ -181,9 +193,14 @@ int countAdjacentMines(int row, int col, random mines[MAXMINES],
 }
 
 void saveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mines[MAXMINES], int remainTurn, clock_t t1) {
+
 	ofstream outFile;
-	
-	outFile.open("Text.txt");
+	if ( LEVEL == BEGINNER)
+		outFile.open("savegameBEGINNER.txt");
+	else if (LEVEL == INTERMEDIATE)
+		outFile.open("savegameINTERMEDIATE.txt");
+	else if (LEVEL == ADVANCED)
+		outFile.open("savegameADVANCED.txt");
 	for (int i = 0; i < LENGTH; i++) {
 		for (int j = 0; j < LENGTH; j++) {
 			outFile << displayBoard[i][j] << ' ';
@@ -216,7 +233,12 @@ void saveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mi
 // open save game:
 void openSaveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mines[MAXMINES], int& remainTurn, clock_t& t1) {
 	ifstream outFile;
-	outFile.open("Text.txt");
+	if (LEVEL == BEGINNER)
+		outFile.open("savegameBEGINNER.txt");
+	else if (LEVEL == INTERMEDIATE)
+		outFile.open("savegameINTERMEDIATE.txt");
+	else if (LEVEL == ADVANCED)
+		outFile.open("savegameADVANCED.txt");
 	for (int i = 0; i < LENGTH; i++) {
 		for (int j = 0; j < LENGTH; j++) {
 			outFile >> displayBoard[i][j];
@@ -237,5 +259,158 @@ void openSaveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], rando
 
 	outFile >> remainTurn >> t1;
 	outFile.close();
+	return;
+}
+
+bool isempty(ifstream& pFile)
+{
+	return pFile.peek() == ifstream::traits_type::eof();
+}
+
+void initialscore() {
+	typedef struct {
+		double time;
+		char name[100];
+	}  player_n;
+	player_n p[5] = {
+			{99999,"Non-player"},
+			{99999,"Non-player"},
+			{99999,"Non-player"},
+			{99999,"Non-player"},
+			{99999,"Non-player"} };
+	ofstream file;
+	if (LEVEL == BEGINNER)
+		file.open("scorebeginnner.txt");
+	else if (LEVEL == INTERMEDIATE)
+		file.open("scoreintermediate.txt");
+	else if (LEVEL == ADVANCED)
+		file.open("scoreadvanced.txt");
+	if (!file) {
+		cout << "Error: file not opened." << endl;
+		return;
+	}
+	for (short i = 0; i < 5; i++) {
+		file << p[i].time << setw(25) << p[i].name << endl;
+	}
+	file.close();
+	return;
+}
+
+void highscore(string name, double time) {
+	ifstream ifs;
+	if (LEVEL == BEGINNER) {
+		ifs.open("scorebeginnner.txt");
+	}
+	else if (LEVEL == INTERMEDIATE) {
+		ifs.open("scoreintermediate.txt");
+	}
+	else if (LEVEL == ADVANCED) {
+		ifs.open("scoreadvanced.txt");
+	}
+
+	//If file is empty, initialize the file
+	if (isempty(ifs)) {
+		ifs.close();
+		initialscore();
+	}
+	ifs.close();
+
+
+	//Save score to file
+	ofstream ofs;
+	if (LEVEL == BEGINNER) {
+		ofs.open("scorebeginnner.txt", ios::app);
+	}
+	else if (LEVEL == INTERMEDIATE) {
+		ofs.open("scoreintermediate.txt", ios::app);
+	}
+	else if (LEVEL == ADVANCED) {
+		ofs.open("scoreadvanced.txt", ios::app);
+	}
+	ofs << time << setw(23) << name << endl;
+	ofs.close();
+
+
+	//Sort the score
+	ifstream ifs1;
+	if (LEVEL == BEGINNER) {
+		ifs1.open("scorebeginnner.txt");
+	}
+	else if (LEVEL == INTERMEDIATE) {
+		ifs1.open("scoreintermediate.txt");
+	}
+	else if (LEVEL == ADVANCED) {
+		ifs1.open("scoreadvanced.txt");
+	}
+	int i = 0;
+	string k[10];
+	while (!ifs1.eof()) {
+		char temp[255];
+		ifs1.getline(temp, 100);
+		k[i++] = temp;
+	}
+	for (int j = 0; j <= 5; j++) {
+		for (int m = j + 1; m <= 5; m++) {
+			int q = stoi(k[j]);
+			int w = stoi(k[m]);
+			if (q > w) k[j].swap(k[m]);
+		}
+	}
+	ifs1.close();
+
+	// Save score to file after sorting
+	ofstream ofs1;
+	if (LEVEL == BEGINNER) {
+		ofs1.open("scorebeginnner.txt");
+	}
+	else if (LEVEL == INTERMEDIATE) {
+		ofs1.open("scoreintermediate.txt");
+	}
+	else if (LEVEL == ADVANCED) {
+		ofs1.open("scoreadvanced.txt");
+	}
+	for (int i = 0; i < 5; i++) {
+		ofs1 << k[i] << "\n";
+	}
+	ofs1.close();
+	return;
+}
+void showScoreBoard() {
+	system("cls");
+	ifstream ifs;
+	if (LEVEL == BEGINNER) {
+		ifs.open("scorebeginnner.txt");
+	}
+	else if (LEVEL == INTERMEDIATE) {
+		ifs.open("scoreintermediate.txt");
+	}
+	else if (LEVEL == ADVANCED) {
+		ifs.open("scoreadvanced.txt");
+	}
+
+	//If file is empty, initialize the file
+	if (isempty(ifs)) {
+		ifs.close();
+		initialscore();
+	}
+	ifs.close();
+	char input[100];
+	ifstream file;
+	if (LEVEL == BEGINNER)
+		file.open("scorebeginnner.txt");
+	else if (LEVEL == INTERMEDIATE)
+		file.open("scoreintermediate.txt");
+	else if (LEVEL == ADVANCED)
+		file.open("scoreadvanced.txt");
+	cout << "\t\t\t-------SCORE BOARD-------\n";
+	cout << "\t\t\tTime" << setw(20) << "Name" << endl;
+	while (!file.eof()) {
+		file.getline(input, 100);
+		cout << "\t\t\t" << input << endl;
+	}
+	file.close();
+	system("pause");
+	promptUserToChooseLevel();
+	playMinesweeper();
 	return;
 }

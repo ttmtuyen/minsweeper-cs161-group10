@@ -8,6 +8,8 @@
 #include<Windows.h>
 #include<iomanip>
 #include<fstream>
+#include<sstream>
+#include<string>
 #include"console.h"
 using namespace std;
 
@@ -71,4 +73,13 @@ void saveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mi
 void openSaveGame(char displayBoard[][MAXSIDE], char baseBoard[][MAXSIDE], random mines[MAXMINES], int& remainTurn, clock_t& t1);
 
 // leaderboard:
-void scoreBoard(double time, char name[50]);
+void highscore(string name, double time);
+
+// show leaderboard:
+void showScoreBoard();
+
+// check Empty file:
+bool isempty(ifstream& pFile);
+
+//
+void initialscore();

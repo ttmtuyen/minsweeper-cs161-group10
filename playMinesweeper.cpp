@@ -1,7 +1,7 @@
 #include "main.h"
 int LENGTH(0); // The length of the board
 int MINES(0); // number of mines on the board
-
+int LEVEL(0);
 
 
 void promptUserToChooseLevel() {
@@ -9,27 +9,27 @@ void promptUserToChooseLevel() {
 	setColor(12);
 	cout  << "\t\t\tWelcome to playing game Minesweeper\n\n";
 	setColor(7);
-	int level;
+
 	cout  << "----------------------------NEMU-------------------------------------\n";
 	cout << "|Enter the difficulty level you want to choose:                     |";
 	cout << "\n|PRESS 0 if you want to choose BEGINNER 9*9 cells and 10 mines      |";
 	cout << "\n|PRESS 1 if you want to choose INTERMEDIATE 16*16 cells and 40 mines|";
 	cout << "\n|PRESS 2 if you want to choose HARD 24*24 cells and 99 mines        |\n";
 	cout << "---------------------------------------------------------------------\n";
-	cin >> level;
-	if (level == BEGINNER)
+	cin >> LEVEL;
+	if (LEVEL == BEGINNER)
 	{
 		LENGTH = 9;
 		MINES = 10;
 	}
 
-	if (level == INTERMEDIATE)
+	if (LEVEL == INTERMEDIATE)
 	{
 		LENGTH = 16;
 		MINES = 40;
 	}
 
-	if (level == ADVANCED)
+	if (LEVEL == ADVANCED)
 	{
 		
 		LENGTH = 24;
@@ -44,7 +44,7 @@ void playMinesweeper() {
 
 	bool gameOver(false);
 	clock_t t1, t2, t3, timeNow;
-	t1 = clock();
+
 	t3 = clock();
 	// create 2 dimension array
 	char baseBoard[MAXSIDE][MAXSIDE], displayBoard[MAXSIDE][MAXSIDE];
@@ -57,18 +57,24 @@ void playMinesweeper() {
 	putMines(mines, baseBoard);
 
 	// check whether it is the first time move or not
-	bool firstMove = true;
+	//bool firstMove = true;
 	
 	// open save game:
 	system("cls");
 	char put;
-	cout << "Do you want to load your save game? (Y/N): ";
+	cout << "\t\tMENU:\n";
+	cout << "If you want to save game, (PRESS Y)\n";
+	cout << "If you want to open leaderboar, (PRESS L)\n";
+	cout << "If you want to play game, press any keys.\n";
 	cin >> put;
+	t1 = clock();
 	if (put == 'y' || put == 'Y') {
 		openSaveGame(displayBoard, baseBoard, mines, remainTurn, t1);
 		t1 = t1 - t3;
-		
+
 	}
+	else if (put == 'l' || put == 'L')
+		showScoreBoard();
 	else t1 = -t1;
 		
 
@@ -78,11 +84,18 @@ void playMinesweeper() {
 		system("cls");
 		// check the player want to put plag or move
 		char put(0);
+		
+		timeNow = clock();
+		timeNow = timeNow + t1;
+		gotoXY(30, 2);
+		cout << "Time since last input: " << (int)timeNow / 1000 << 's' << endl;
+
 		outputConsole(displayBoard);
+
 		cout << endl << "\t\t\tMENU";
-		cout << endl << "If you want to put flag, press 'p'";
+		cout << endl << "If you want to put flag or remove flag, press 'p'";
 		cout << endl << "If you want to save game, press 's'";
-		cout << endl << "If you want to move, press any key to continue.\n";
+		cout << endl << "If you want to move, press any keys to continue.\n";
 		cin >> put;
 		cin.ignore(20, '\n');
 		if (put == 'p') {
@@ -91,33 +104,35 @@ void playMinesweeper() {
 			continue;
 		}
 		else if (put == 's') {
-			timeNow = clock();
-			timeNow = timeNow + t1 ;
-			saveGame( displayBoard,  baseBoard,  mines,  remainTurn,  timeNow);
+			saveGame(displayBoard, baseBoard, mines, remainTurn, timeNow);
 			exit(0);
 		}
+
 		moving(x, y);
 
-		if (firstMove == true) {
-			if (checkMine(x, y, baseBoard) )
-				replaceMine(x, y, baseBoard);
-		}
-
-		firstMove = false;
 
 		gameOver = continuePlayGame(displayBoard, baseBoard, mines, x, y, remainTurn, t1);
 
 		if ((gameOver == false) && remainTurn == 0) {
 			char yn;
+			string name;
+			int timeComplete(0);
 			t2 = clock();
-			cout << endl << '\t';
+			timeComplete = (((int)t2) + ((int)t1)) / 1000;
+
 			setColor(12);
-			cout << " YOU WON !!!";
-			cout << "\nTime to complete: " << (((int)t2) - ((int)t1)) / 1000 << " sec\n";
+
+			cout << endl << '\t' << " YOU WON !!!";
+			cout << "\nTime to complete: " << timeComplete << " sec\n";
 			setColor(7);
 			cin.ignore(20, '\n');
+
+			cout << "Enter your name: ";
+			getline(cin, name);
+			cin.ignore(50, '\n');
+
+			highscore( name, timeComplete);
 			cout << "\nPlay again (Y/N): ";
-			
 			cin >> yn;
 			if (yn == 'Y' || yn == 'y') {
 				promptUserToChooseLevel();
