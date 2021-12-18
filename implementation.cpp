@@ -402,8 +402,10 @@ void showScoreBoard() {
 		file.open("scoreintermediate.txt");
 	else if (LEVEL == ADVANCED)
 		file.open("scoreadvanced.txt");
+	setColor(12);
 	cout << "\t\t\t-------SCORE BOARD-------\n";
 	cout << "\t\t\tTime" << setw(20) << "Name" << endl;
+	setColor(7);
 	while (!file.eof()) {
 		file.getline(input, 100);
 		cout << "\t\t\t" << input << endl;
